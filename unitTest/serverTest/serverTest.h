@@ -3,13 +3,13 @@
 #include <string>
 
 namespace {
-    class clientTest : public testing::Test {
+    class serverTest : public testing::Test {
     protected:
         virtual void SetUp() {
         }
     };
 
-    TEST_F(clientTest, test) {
+    TEST_F(serverTest, test) {
         ASSERT_EQ(1, 1);
     }
 }
