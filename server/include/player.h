@@ -7,22 +7,29 @@ class Observer {
 public:
     virtual ~Observer() {}
 
-    virtual void onNotify(std::string msg) = 0;
+    virtual void onNotify(const std::string& msg) = 0;
 };
 
 class Player: public Observer {
 private:
-    int id_;
-    int name_;
-    int role_;
-    int death_;
+    int id_;                //id
+    std::string name_;      //이름
+    int role_;              //역할
+    int death_;             //죽음
 
 public:
-    Player();
+    Player(int id, std::string& name);
 
     ~Player();
 
-    virtual void onNotify(std::string msg);
+    /**
+     * player msg를 전달한다.
+     * @param msg 메시지
+     */
+    virtual void onNotify(const std::string& msg);
+
+    //getter
+    std::string& getName() { return name_; }
 };
 
 #endif

@@ -8,9 +8,9 @@ class Group;
 
 class Game {
 private:
-    std::unique_ptr<Group> players_;
-    std::unique_ptr<Group> mafia_;
-    std::unique_ptr<Group> citizen_;
+    std::unique_ptr<Group> players_;    //플레이어 그룹
+    std::unique_ptr<Group> mafia_;      //마피아 그룹
+    std::unique_ptr<Group> citizen_;    //시민 그룹
 
 public:
     Game();
