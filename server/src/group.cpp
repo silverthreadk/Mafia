@@ -1,5 +1,5 @@
 #include "group.h"
-#include "player.h";
+#include "player.h"
 
 void Subject::addObserver(std::shared_ptr<Observer> observer)
 {
