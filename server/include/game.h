@@ -7,9 +7,12 @@
 
 class Player;
 class Group;
+class GameState;
 
 class Game {
 private:
+    std::unique_ptr<GameState> game_state_;             //game 상태
+
     std::vector<std::shared_ptr<Player> > player_info_; //플레이어 정보 
     std::unique_ptr<Group> players_;                    //플레이어 그룹
     std::unique_ptr<Group> mafia_;                      //마피아 그룹
