@@ -1,19 +1,24 @@
 #include "group.h"
 #include "player.h";
 
-void Group::addObserver(std::shared_ptr<Observer> observer)
+void Subject::addObserver(std::shared_ptr<Observer> observer)
 {
     observers_.insert(observer);
 }
 
-void Group::removeObserver(std::shared_ptr<Observer> observer)
+void Subject::removeObserver(std::shared_ptr<Observer> observer)
 {
     observers_.erase(observer);
 }
 
-void Group::notify(std::string msg)
+void Subject::notify(const std::string& msg)
 {
     for (auto observer : observers_) {
         observer->onNotify(msg);
     }
+}
+
+
+void Group::notifyObservers(const std::string& msg) {
+    notify(msg);
 }
