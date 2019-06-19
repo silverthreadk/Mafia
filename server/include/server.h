@@ -3,34 +3,21 @@
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
-#include <vector>
 
 using boost::asio::ip::tcp;
 
-class session {
+class Session;
+
+class Server {
 public:
-    session(tcp::socket& socket);
-    ~session();
-    void read();
+    Server(boost::asio::io_service& io_service, short port);
+
 private:
-    void handleRead(const boost::system::error_code& error, size_t bytes_transferred);
-
-    tcp::socket socket_;
-}
-
-class server {
-public:
-    server(const int port);
-    ~server();
-
-    void run();
-private:
-    boost::asio::io_service service_;
+    boost::asio::io_service& service_;
     tcp::acceptor acceptor_;
-    int port_;
 
     void accept();
-    void handleAccept();
+    void handle_accept(Session* pSession, const boost::system::error_code& error);
 };
 
 #endif

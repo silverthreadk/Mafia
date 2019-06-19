@@ -1,49 +1,56 @@
 #include "server.h"
-//*************************************
-// session
-//*************************************
-session::session(tcp::socket& socket)
-    : socket_(socket)
-{}
+#include <iostream>
 
-session::~session() {
-}
+class Session {
+public:
+    Session(boost::asio::io_service& io_service)
+     :socket_(io_service)
+    {
+    }
 
-void session::read() {
-}
+    tcp::socket& socket() {
+        return socket_;
+    }
 
-void session::handleRead(const boost::system::error_code& error, size_t bytes_transferred) {
-}
+    void start() {
+        socket_.async_read_some(boost::asio::buffer(data_, 1024),
+            boost::bind(&Session::handle_read, this,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
+    }
+private:
+    void handle_read(const boost::system::error_code& error, size_t bytes_transferred) {
+        // 메세지가 도착하면 호출되는 핸들러
+        if (error) {
+            delete this;
+        } else {
+            std::cout << data_ << std::endl;
+        }
+    }
 
-//*************************************
-// server
-//*************************************
-server::server(const int port) {
-    acceptor_(serviece_, tcp::endpoint(tcp::v4(), port));
-}
+    tcp::socket socket_;
+    char data_[1024];
+};
 
-server::~server() {
-}
-
-void server::run() {
+Server::Server(boost::asio::io_service& io_service, short port)
+: service_(io_service),
+  acceptor_(io_service, tcp::endpoint(tcp::v4(), port))
+{
     accept();
 }
 
-void server::accept() {
-    tcp::socket socket(service_);
-    sockets_.push_back(socket);
-    acceptor_.async_accept(socket, boost::bind(&server::handleAccept, this, boost::asio::placeholders::error));
+void Server::accept() {
+    Session* pSession = new Session(service_);
+    acceptor_.async_accept(pSession->socket(), boost::bind(&Server::handle_accept, this, pSession, boost::asio::placeholders::error));
 }
 
-void server::handleAccept(const boost::system::error_code& error) {
+void Server::handle_accept(Session* pSession, const boost::system::error_code& error) {
+    // client가 접속하면 호출되는 핸들러
     if (error) {
-        // connect 실패
-        return;
+        delete pSession;
+    } else {
+        pSession->start();
     }
-
-    tcp::socket(service_);
-    session* pSession = new session(socket);
-    pSession->read();
+    accept();
 }
 
-#endif
