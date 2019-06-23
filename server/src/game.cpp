@@ -1,13 +1,17 @@
 #include "game.h"
-#include "group.h"
-#include "player.h"
 
 #include <algorithm>
 #include <memory>
 #include <random>
 
+#include "group.h"
+#include "player.h"
+#include "game_state.h"
+
 Game::Game()
 {
+    game_state_ = std::make_unique<GameState>();
+
     players_ = std::make_unique<Group>();
     mafia_ = std::make_unique<Group>();
     citizen_ = std::make_unique<Group>();
